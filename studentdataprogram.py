@@ -60,7 +60,7 @@ with closing(sqlite3.connect("student_data.db" ))as connection:
 
 
    def add_marks(student_id, subject_id, marks):
-       cursor.execute("INSERT INTO marks(student_id,subject_id,marks) VALUES(?,?,?)",(student_id, subject_id, marks))
+       cursor.execute("INSERT INTO results(student_id,subject_id,marks) VALUES(?,?,?)",(student_id, subject_id, marks))
        connection.commit()
        print("marks added ")
 
@@ -70,7 +70,7 @@ with closing(sqlite3.connect("student_data.db" ))as connection:
                       FROM results
                       JOIN subjects ON results.subject_id=subjects.subject_id
                       WHERE results.student_id=?
-                   ''',(student_id))
+                   ''',(student_id,))
        marks= cursor.fetchall()
        print("Student Marks")
        for i in marks:
@@ -78,13 +78,13 @@ with closing(sqlite3.connect("student_data.db" ))as connection:
 
    def display_subject_toppers(subject_id):
        cursor.execute('''
-               SELECT student.name,result.marks
+               SELECT students.name,results.marks
                FROM results 
                JOIN students ON 
               results.student_id=students.student_id 
               WHERE results.subject_id=?
               ORDER BY results.marks DESC LIMIT 1                                    
-       ''',(subject_id))
+       ''',(subject_id,))
        topper=cursor.fetchone()
        print(f"Topper in the subject :")
        if topper:
@@ -98,7 +98,7 @@ with closing(sqlite3.connect("student_data.db" ))as connection:
                       FROM results
                       WHERE subject_id=?
 
-           ''',(subject_id))
+           ''',(subject_id,))
        avg=cursor.fetchone()[0]
        print(f"average marks in subject is :{avg}")
 
